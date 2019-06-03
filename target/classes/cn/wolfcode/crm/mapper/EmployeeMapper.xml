@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="age" property="age"/>
+        <result column="admin" property="admin"/>
+        <result column="dept_id" property="deptId"/>
+        <association property="dept" javaType="cn.wolfcode.crm.domain.Department" columnPrefix="d_">
+            <result column="name" property="name"/>
+        </association>
+
+        <collection property="roles" ofType="Role" select="cn.wolfcode.crm.mapper.RoleMapper.selectByEmpId"
+                    column="id">
+        </collection>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from employee
+    where id = #{id}
+  </delete>
+
+    <insert id="insert" parameterType="cn.wolfcode.crm.domain.Employee" useGeneratedKeys="true" keyProperty="id">
+    insert into employee (name, password, email, age, admin, dept_id)
+    values (#{name}, #{password}, #{email}, #{age}, #{admin}, #{dept.id})
+  </insert>
+
+    <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Employee">
+    update employee
+    set name = #{name},
+      password = #{password},
+      email = #{email},
+      age = #{age},
+      admin = #{admin},
+      dept_id = #{dept.id}
+    where id = #{id}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select id, name, password, email, age, admin, dept_id
+    from employee
+    where id = #{id}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, password, email, age, admin, dept_id
+    from employee
+  </select>
+    <select id="queryForCount" resultType="java.lang.Integer">
+        select count(1)
+        from employee e LEFT JOIN department d
+        ON e.dept_id = d.id
+        <include refid="where_sql"/>
+    </select>
+    <select id="queryForList" resultMap="BaseResultMap">
+        select e.id, e.name, password, email, age, admin, dept_id,d.name d_name
+        from employee e LEFT JOIN department d
+        ON e.dept_id = d.id
+        <include refid="where_sql"/>
+        limit #{start},#{pageSize}
+    </select>
+
+
+    <sql id="where_sql">
+        <where>
+            <if test="keyword != null">
+                AND ((e.name Like concat('%',#{keyword},'%')) OR (email Like concat('%',#{keyword},'%')))
+            </if>
+            <if test="deptId != -1">
+                AND e.dept_id=#{deptId}
+            </if>
+        </where>
+    </sql>
+
+
+    <insert id="insertIntoEmployeeRole">
+    INSERT INTO employee_role VALUES (#{eid},#{rid})
+  </insert>
+
+    <delete id="deletFromEmployeeRole">
+    DELETE FROM employee_role WHERE employee_id=#{id}
+  </delete>
+
+    <delete id="deleteFromEmployeeRoleByRole">
+        DELETE FROM employee_role WHERE role_id=#{id}
+    </delete>
+    <delete id="batchDelete">
+        DELETE FROM employee WHERE id in
+        <foreach collection="array" open="(" close=")" separator="," item="ele">
+          #{ele}
+        </foreach>
+    </delete>
+
+    <select id="selectByUsenameAndPassword" resultType="cn.wolfcode.crm.domain.Employee">
+        SELECT * FROM employee WHERE name=#{username} and password=#{password}
+    </select>
+    <select id="selectExpressionsByEmployeeId" resultType="java.lang.String">
+        SELECT DISTINCT p.expression
+        FROM employee_role er
+        LEFT JOIN role_permission rp ON er.role_id=rp.role_id
+        LEFT JOIN permission p ON rp.permission_id=p.id
+        WHERE er.employee_id=#{id}
+    </select>
+    <select id="selectByUsername" resultType="cn.wolfcode.crm.domain.Employee">
+        SELECT * FROM employee WHERE name=#{username}
+    </select>
+
+    <!--<select id="selectExpressionsByEmployeeId" resultType="java.lang.String">
+        SELECT DISTINCT p.expression
+        FROM employee e LEFT JOIN employee_role er ON e.id=er.employee_id
+        LEFT JOIN role_permission rp ON er.role_id=rp.role_id
+        LEFT JOIN permission p ON rp.permission_id=p.id
+        WHERE e.id=#{id}
+    </select>-->
+
+
+</mapper>

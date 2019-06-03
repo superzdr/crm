@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Role" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="sn" property="sn" />
+    <collection property="permissions" ofType="cn.wolfcode.crm.domain.Permission" column="id"
+                select="selectPermissionWithRoleId"></collection>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from role
+    where id = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="cn.wolfcode.crm.domain.Role" useGeneratedKeys="true" keyProperty="id" >
+    insert into role (name, sn)
+    values (#{name}, #{sn})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Role" >
+    update role
+    set name = #{name},
+      sn = #{sn}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select r.id, r.name, r.sn
+    from role r
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, sn
+    from role
+  </select>
+    <select id="queryForCount" resultType="java.lang.Integer">
+      select count(1)
+      from role
+    </select>
+  <select id="queryForList" resultType="cn.wolfcode.crm.domain.Role">
+    select id, name, sn
+      from role
+      limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectByEmpId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select r.id, r.name, r.sn
+    from employee_role e LEFT JOIN role r
+    on e.role_id = r.id
+    WHERE e.employee_id = #{id}
+  </select>
+  
+  <select id="selectPermissionWithRoleId" resultType="cn.wolfcode.crm.domain.Permission">
+    SELECT p.id, p.name, p.expression
+    FROM role_permission rp LEFT JOIN permission p
+    ON rp.permission_id = p.id
+    WHERE rp.role_id=#{id}
+  </select>
+
+  <delete id="deleteFromRolePermissionByRoleId">
+    DELETE FROM role_permission WHERE role_id=#{id}
+  </delete>
+
+
+  <insert id="insetIntoRolePermission">
+    INSERT INTO role_permission VALUES (#{rid},#{pid})
+  </insert>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.DepartmentMapper">
+    <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Department">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sn" property="sn"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from department
+    where id = #{id}
+  </delete>
+    <insert id="insert" parameterType="cn.wolfcode.crm.domain.Department" useGeneratedKeys="true" keyProperty="id">
+    insert into department (name, sn)
+    values (#{name}, #{sn})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Department">
+    update department
+    set name = #{name},
+      sn = #{sn}
+    where id = #{id}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select id, name, sn
+    from department
+    where id = #{id}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, sn
+    from department
+  </select>
+
+    <!--<select id="queryForCount" resultType="java.lang.Integer">
+      select count(1)
+      from department
+    </select>-->
+    <select id="queryForList" resultType="cn.wolfcode.crm.domain.Department">
+         select id, name, sn
+        from department
+
+    </select>
+
+</mapper>

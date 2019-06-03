@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	<context:property-placeholder location="classpath:db.properties" system-properties-mode="NEVER"/>
+	
+	<context:component-scan base-package="cn.wolfcode.crm"/>
+	
+	<context:annotation-config />
+	
+	<bean id="myDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	
+	<bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="myDataSource" />
+		<property name="mapperLocations" value="classpath:cn/wolfcode/crm/mapper/*Mapper.xml" />
+		<property name="typeAliasesPackage" value="cn.wolfcode.crm.domain"/>
+	</bean>
+	
+	<!-- <bean id="MyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="mySqlSessionFactory"></property>
+		<property name="mapperInterface" value="cn.wolfcode.ssm.mapper.DepartmentMapper"></property>
+	</bean> -->
+
+	<!--<bean id="employeeService" class="cn.wolfcode.ssm.service.impl.EmployeeServiceImpl">
+		<property name="mapper" ref="MyMapper"></property>
+	</bean> -->
+	
+	<!-- 使用了该方法后就不再需要通过MapperFactoryBean来创建对象了,spring会把他绑定给service -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 需要注意的是它里面需要的是mapper接口所在的包-->
+		<property name="basePackage" value="cn.wolfcode.crm.mapper" />
+	</bean>
+	
+	<!-- 使用spring的事务管理DataSourceTransactionManager,它里面有doBegin,roRollback等方法 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 需要把相关的数据库设置个这个事务管理器 -->
+		<property name="dataSource" ref="myDataSource" />
+	</bean>
+	<!-- 目前看来,自定义的txManager以及mapper都可以省略,但是druid数据库连接池和mybatis的sqlsession是不能够省略的 -->
+	
+	<!-- 注意txAdvice在使用的时候必须有ID,会在aop:advisor中使用 -->
+	<tx:advice transaction-manager="txManager" id="txAdvice">
+		<!-- 其实质上是对Service类下的方法进一步过滤 -->
+		<tx:attributes>
+			<!-- 对于查询方法使用只读方法,这样可以提升性能 -->
+			<tx:method name="query*" read-only="true"/>
+			<tx:method name="list*" read-only="true"/>
+			<tx:method name="get*" read-only="true"/>
+			<!-- 对应其他方法是用事务 -->
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.wolfcode.crm.service.*Service.*(..))" id="pc"/>
+		<!-- advisor 这里需把前面创建的tx:advice和刚刚定义的pointcut关联起来 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
+	</aop:config>
+	
+</beans>
