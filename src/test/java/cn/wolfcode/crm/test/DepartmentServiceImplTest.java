@@ -1,5 +1,8 @@
 package cn.wolfcode.crm.test;
 
+import cn.wolfcode.crm.domain.SystemDictionaryItem;
+import cn.wolfcode.crm.mapper.EmployeeMapper;
+import cn.wolfcode.crm.mapper.SystemDictionaryItemMapper;
 import cn.wolfcode.crm.service.IDepartmentService;
 import cn.wolfcode.crm.service.IEmployeeService;
 import org.junit.Test;
@@ -14,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
 public class DepartmentServiceImplTest {
-    @Autowired
+   /* @Autowired
     private IDepartmentService service;
     @Test
     public void saveOrUpdate() throws Exception {
@@ -43,6 +46,20 @@ public class DepartmentServiceImplTest {
     @Test
     public void testEmp() throws Exception{
         //employeeService.login("赵总","1");
+    }
+
+    @Autowired
+    private EmployeeMapper employeeMapper;
+    @Test
+    public void testEmployeeMapper() throws Exception{
+        System.out.println(employeeMapper.selectExpressionsByEmployeeId(6L));
+    }*/
+
+    @Autowired
+    private SystemDictionaryItemMapper systemDictionaryItemMapper;
+    @Test
+    public void testSdim() throws Exception{
+        System.out.println(systemDictionaryItemMapper.selectAll());
     }
 
 }

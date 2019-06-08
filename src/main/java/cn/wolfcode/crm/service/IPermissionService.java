@@ -1,8 +1,8 @@
 package cn.wolfcode.crm.service;
 
 import cn.wolfcode.crm.domain.Permission;
-import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.query.QueryObject;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface IPermissionService {
 
     List<Permission> listAll();
 
-    PageResult<Permission> query(QueryObject qo);
+    PageInfo<Permission> query(QueryObject qo);
 }

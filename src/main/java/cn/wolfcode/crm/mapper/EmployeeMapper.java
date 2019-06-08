@@ -18,7 +18,7 @@ public interface EmployeeMapper {
 
     int updateByPrimaryKey(Employee record);
 
-    Integer queryForCount(QueryObject qo);
+    //Integer queryForCount(QueryObject qo);
 
     List<Employee> queryForList(QueryObject qo);
 

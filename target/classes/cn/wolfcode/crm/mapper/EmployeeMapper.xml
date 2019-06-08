@@ -30,7 +30,7 @@
     <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Employee">
     update employee
     set name = #{name},
-      password = #{password},
+
       email = #{email},
       age = #{age},
       admin = #{admin},
@@ -46,18 +46,18 @@
     select id, name, password, email, age, admin, dept_id
     from employee
   </select>
-    <select id="queryForCount" resultType="java.lang.Integer">
+    <!--<select id="queryForCount" resultType="java.lang.Integer">
         select count(1)
         from employee e LEFT JOIN department d
         ON e.dept_id = d.id
         <include refid="where_sql"/>
-    </select>
+    </select>-->
     <select id="queryForList" resultMap="BaseResultMap">
         select e.id, e.name, password, email, age, admin, dept_id,d.name d_name
         from employee e LEFT JOIN department d
         ON e.dept_id = d.id
         <include refid="where_sql"/>
-        limit #{start},#{pageSize}
+
     </select>
 
 
@@ -74,7 +74,7 @@
 
 
     <insert id="insertIntoEmployeeRole">
-    INSERT INTO employee_role VALUES (#{eid},#{rid})
+    INSERT INTO employee_role(employee_id,role_id) VALUES(#{eid},#{rid})
   </insert>
 
     <delete id="deletFromEmployeeRole">
@@ -97,8 +97,8 @@
     <select id="selectExpressionsByEmployeeId" resultType="java.lang.String">
         SELECT DISTINCT p.expression
         FROM employee_role er
-        LEFT JOIN role_permission rp ON er.role_id=rp.role_id
-        LEFT JOIN permission p ON rp.permission_id=p.id
+        RIGHT JOIN role_permission rp ON er.role_id=rp.role_id
+        RIGHT JOIN permission p ON rp.permission_id=p.id
         WHERE er.employee_id=#{id}
     </select>
     <select id="selectByUsername" resultType="cn.wolfcode.crm.domain.Employee">

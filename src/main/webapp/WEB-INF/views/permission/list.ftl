@@ -38,13 +38,13 @@
                             <th>操作</th>
                         </tr>
                         </thead>
-                    <#list result.data as entity>
+                    <#list result.list as entity>
                         <tr>
                             <td>${entity_index + 1}</td>
                             <td>${entity.name}</td>
                             <td>${entity.expression}</td>
                             <td>
-                                <a href="/permission/delete.do?id=${entity.id}"
+                                <a href="javaScript:;" data-url="/permission/delete.do?id=${entity.id}"
                                    class="btn btn-danger btn-xs btn_delete">
                                     <span class="glyphicon glyphicon-trash"></span> 删除
                                 </a>
@@ -53,7 +53,7 @@
                     </#list>
                     </table>
                     <!--分页-->
-                <#include "../common/page.ftl" />
+                <#include "../common/page_withplugin.ftl" />
                 </div>
             </div>
         </section>

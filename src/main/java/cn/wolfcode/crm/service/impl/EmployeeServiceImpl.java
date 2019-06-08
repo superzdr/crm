@@ -1,17 +1,30 @@
 package cn.wolfcode.crm.service.impl;
 
 import cn.wolfcode.crm.domain.Employee;
+import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.mapper.EmployeeMapper;
 import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.query.RoleRelation;
 import cn.wolfcode.crm.service.IEmployeeService;
+import cn.wolfcode.crm.shiro.CRMRealm;
 import cn.wolfcode.crm.util.LogicException;
 import cn.wolfcode.crm.util.UserContext;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -21,6 +34,10 @@ import java.util.List;
 public class EmployeeServiceImpl implements IEmployeeService {
     @Autowired
     private EmployeeMapper mapper;
+
+    @Autowired
+    private CRMRealm realm;
+
     @Override
     public void saveOrUpdate(Employee entity) {
         if(entity.getId() == null){
@@ -46,17 +63,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
-    public PageResult<Employee> query(QueryObject qo) {
-        //totalpage
-        int count =mapper.queryForCount(qo);
-
-        //totalpage !=0 pageResult
-        if(count == 0){
-            return new PageResult<Employee>(qo.getCurrentPage(),qo.getPageSize());
-        }
-
+    public PageInfo<Employee> query(QueryObject qo){
+        PageHelper.startPage(qo.getCurrentPage(),qo.getPageSize());
         List<Employee> list = mapper.queryForList(qo);
-        return new PageResult<Employee>(list,qo.getCurrentPage(),qo.getPageSize(),count);
+        return new PageInfo<>(list);
     }
 
     @Override
@@ -66,6 +76,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public int deletFromEmployeeRole(Long id) {
+        realm.clearCached();//删除关系前先把缓存清除
         return mapper.deletFromEmployeeRole(id);
     }
 
@@ -83,5 +94,49 @@ public class EmployeeServiceImpl implements IEmployeeService {
         UserContext.setEmployeeSession(employee);
         //session.setAttribute("EXPRESSION_IN_SESSION",mapper.selectExpressionsByEmployeeId(employee.getId()));
         UserContext.setExpressionSession(mapper,employee);
+    }
+
+    @Override
+    public Workbook exportXls() {
+        Workbook workbook = new HSSFWorkbook();
+
+        List<Employee> employees = mapper.selectAll();
+
+        Sheet sheet = workbook.createSheet("员工信息");
+
+        Row header = sheet.createRow(0);
+
+        header.createCell(0).setCellValue("账号");
+        header.createCell(1).setCellValue("年龄");
+        header.createCell(2).setCellValue("邮箱");
+
+        for (int i = 0; i <employees.size() ; i++) {
+            Row row = sheet.createRow(i + 1);
+            row.createCell(0).setCellValue(employees.get(i).getName());
+            row.createCell(1).setCellValue(employees.get(i).getAge());
+            row.createCell(2).setCellValue(employees.get(i).getEmail());
+        }
+        return workbook;
+    }
+
+    @Override
+    public void importXls(InputStream inputStream) {
+        try {
+            HSSFWorkbook sheets = new HSSFWorkbook(inputStream);
+            HSSFSheet sheet = sheets.getSheetAt(0);
+            int lastRowNum = sheet.getLastRowNum();
+            for (int i = 0; i <lastRowNum ; i++) {
+                Employee employee = new Employee();
+                HSSFRow row = sheet.getRow(i + 1);
+                employee.setName(row.getCell(0).getStringCellValue());
+                employee.setAge(Double.valueOf(row.getCell(1).getNumericCellValue()).intValue());
+                employee.setEmail(row.getCell(2).getStringCellValue());
+                mapper.insert(employee);
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

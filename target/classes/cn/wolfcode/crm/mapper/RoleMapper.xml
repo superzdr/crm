@@ -55,8 +55,13 @@
     ON rp.permission_id = p.id
     WHERE rp.role_id=#{id}
   </select>
+    <select id="selectSnByEmpId" resultType="java.lang.String">
+      SELECT r.sn
+      FROM role r LEFT JOIN employee_role e on r.id = e.role_id
+      WHERE e.employee_id = #{id}
+    </select>
 
-  <delete id="deleteFromRolePermissionByRoleId">
+    <delete id="deleteFromRolePermissionByRoleId">
     DELETE FROM role_permission WHERE role_id=#{id}
   </delete>
 

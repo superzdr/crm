@@ -1,10 +1,13 @@
 package cn.wolfcode.crm.service.impl;
 
+import cn.wolfcode.crm.domain.Department;
 import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.mapper.PermissionMapper;
 import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.service.IPermissionService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,19 +35,9 @@ public class PermissionServiceImpl implements IPermissionService {
     }
 
     @Override
-    public PageResult<Permission> query(QueryObject qo) {
-        //totalpage
-        System.out.println("in query");
-        System.out.println(qo);
-        int count =mapper.queryForCount(qo);
-        System.out.println(count);
-
-        //totalpage !=0 pageResult
-        if(count == 0){
-            return new PageResult<Permission>(qo.getCurrentPage(),qo.getPageSize());
-        }
-
+    public PageInfo<Permission> query(QueryObject qo){
+        PageHelper.startPage(qo.getCurrentPage(),qo.getPageSize());
         List<Permission> list = mapper.queryForList(qo);
-        return new PageResult<Permission>(list,qo.getCurrentPage(),qo.getPageSize(),count);
+        return new PageInfo<>(list);
     }
 }

@@ -20,14 +20,14 @@
     from permission
   </select>
 
-    <select id="queryForCount" resultType="java.lang.Integer">
+   <!-- <select id="queryForCount" resultType="java.lang.Integer">
       select count(1)
       from permission
-    </select>
+    </select>-->
     <select id="queryForList" resultType="cn.wolfcode.crm.domain.Permission">
       select id, name, expression
       from permission
-      limit #{start},#{pageSize}
+
     </select>
 
     <select id="selectExpression" resultType="String">

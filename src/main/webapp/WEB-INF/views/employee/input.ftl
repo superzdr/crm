@@ -71,7 +71,7 @@
                         required:true,
                         minlength:4
                     },
-                    password:{
+                    /*password:{
                         required:true,
                         minlength:6
                     },
@@ -79,7 +79,7 @@
                         required:true,
                         minlength:6,
                         equalTo:"#password"
-                    },
+                    },*/
                     email:{
                         required:true,
                         email:true

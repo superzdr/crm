@@ -24,7 +24,7 @@
     </mvc:interceptors>-->
 
     <!--配置freeMarker的模板路径 -->
-    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <bean class="cn.wolfcode.crm.shiro.CRMFreeMarkerConfigure">
         <!-- 配置freemarker的文件编码 -->
         <property name="defaultEncoding" value="UTF-8" />
         <!-- 配置freemarker寻找模板的路径 -->
@@ -41,17 +41,22 @@
         <property name="contentType" value="text/html;charset=UTF-8" />
     </bean>
 
-    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <!-- 定义默认的异常处理页面，当该异常类型的注册时使用 -->
+    <!--<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        &lt;!&ndash; 定义默认的异常处理页面，当该异常类型的注册时使用 &ndash;&gt;
         <property name="defaultErrorView" value="common/error"/>
-        <!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+        &lt;!&ndash; 定义异常处理页面用来获取异常信息的变量名，默认名为exception &ndash;&gt;
         <property name="exceptionAttribute" value="ex"/>
-        <!-- 定义需要特殊处理的异常，用类名或完全路径名作为key，异常也页名作为值 -->
+        &lt;!&ndash; 定义需要特殊处理的异常，用类名或完全路径名作为key，异常也页名作为值 &ndash;&gt;
         <property name="exceptionMappings">
             <value>
                 org.apache.shiro.authz.UnauthorizedException=common/nopermission
-                <!-- 这里还可以继续扩展不同异常类型的异常处理 -->
+                &lt;!&ndash; 这里还可以继续扩展不同异常类型的异常处理 &ndash;&gt;
             </value>
         </property>
+    </bean>-->
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+        <property name="maxUploadSize" value="#{1024 * 1024 * 10}"/>
     </bean>
+
 </beans>

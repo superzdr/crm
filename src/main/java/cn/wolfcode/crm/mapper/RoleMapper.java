@@ -24,4 +24,6 @@ public interface RoleMapper {
     int deleteFromRolePermissionByRoleId(Long id);
 
     int insetIntoRolePermission(@Param("rid") Long rid,@Param("pid") Long pid);
+
+    List<String> selectSnByEmpId(Long id);
 }

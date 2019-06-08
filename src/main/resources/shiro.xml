@@ -5,6 +5,7 @@
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="crmRealm"/>
+        <property name="cacheManager" ref="cacheManager"/>
     </bean>
 
     <bean id="shiroFilter"
@@ -28,5 +29,14 @@
         </property>
     </bean>
 
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager" >
+        <property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml" />
+    </bean>
 
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="MD5" />
+    </bean>
 </beans>

@@ -10,7 +10,7 @@
     <script>
 
         $(function () {
-            //拍重
+            //排重
             var ids = $.map($(".selfPermissions option"), function (item) {
                 return item.value;
             })

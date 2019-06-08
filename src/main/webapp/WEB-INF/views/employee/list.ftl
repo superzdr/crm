@@ -42,6 +42,15 @@
                     $.messager.alert(data.errorMsg);
                 }
             }
+
+            $(".btn-import").click(function () {
+                $("#importModal").modal("show");
+
+            })
+
+            $(".btn-save").click(function () {
+                $("#importForm").submit();
+            })
         })
 
     </script>
@@ -94,6 +103,14 @@
                                 <span class="glyphicon glyphicon-trash"></span> 批量删除
                             </a>
 
+                            <#--导入导出-->
+                            <a href="/employee/exportXls.do" target="_blank" class="btn btn-warning">
+                                <span class="glyphicon glyphicon-export"></span> 导出
+                            </a>
+                            <a href="javascript:;" class="btn btn-warning btn-import">
+                                <span class="glyphicon glyphicon-import"></span> 导入
+                            </a>
+
                         </form>
 
                     <table class="table table-striped table-hover">
@@ -108,7 +125,7 @@
                             <th>操作</th>
                         </tr>
                         </thead>
-                        <#list result.data as entity>
+                        <#list result.list as entity>
                             <tr>
                                 <td><input type="checkbox" class="cb" data-id="${entity.id}"></td>
                                 <td>${entity_index + 1}</td>
@@ -120,22 +137,51 @@
                                     <a class="btn btn-info btn-xs btn_redirect" href="/employee/input.do?id=${entity.id}">
                                         <span class="glyphicon glyphicon-pencil"></span> 编辑
                                     </a>
+                                    <@shiro.hasPermission name="employee:delete">
                                     <a href="JavaScript:;" data-url="/employee/delete.do?id=${entity.id}"
                                        class="btn btn-danger btn-xs btn_delete">
                                         <span class="glyphicon glyphicon-trash"></span> 删除
                                     </a>
+                                    </@shiro.hasPermission>
                                 </td>
                             </tr>
                         </#list>
                     </table>
                     <!--分页-->
-                    <#include "../common/page.ftl" />
+                    <#include "../common/page_withplugin.ftl" />
                 </div>
             </div>
         </section>
     </div>
 <#include "../common/footer.ftl" />
 </div>
+<#--导入模态框-->
+<div class="modal fade" id="importModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">员工导入</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="/employee/importXls.do" method="post" id="importForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <input type="file" name="file" accept="application/vnd.ms-excel"><br/>
+                            <a href="/template/employee_import.xls" class="btn btn-success">
+                                <span class="glyphicon glyphicon-download-alt"></span> 下载模板
+                            </a>
+                        </div>
 
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

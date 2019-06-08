@@ -1,10 +1,14 @@
 package cn.wolfcode.crm.service;
 
 import cn.wolfcode.crm.domain.Employee;
+import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.query.RoleRelation;
+import com.github.pagehelper.PageInfo;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -16,11 +20,15 @@ public interface IEmployeeService {
     Employee get(Long id);
     List<Employee> listAll();
 
-    PageResult<Employee> query(QueryObject qo);
+    PageInfo<Employee> query(QueryObject qo);
 
     int insertIntoEmployeeRole(RoleRelation rl);
 
     int deletFromEmployeeRole(Long id);
 
     void login(String username, String password);
+
+    Workbook exportXls();
+
+    void importXls(InputStream inputStream);
 }

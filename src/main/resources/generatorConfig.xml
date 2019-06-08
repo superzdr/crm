@@ -30,7 +30,7 @@
 
 		<!-- 必须要有的，使用这个配置链接数据库 @TODO:是否可以扩展 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-						connectionURL="jdbc:mysql://localhost:3306/rbac" userId="root" password="ok123">
+						connectionURL="jdbc:mysql://localhost:3306/crm" userId="root" password="ok123">
 			<!-- 这里面可以设置property属性，每一个property属性都设置到配置的Driver上 -->
 		</jdbcConnection>
 
@@ -81,7 +81,7 @@
 				value=""/> -->
 		</javaClientGenerator>
 
-		<table tableName="permission" domainObjectName="Permission">
+		<table tableName="systemdictionaryitem" domainObjectName="SystemDictionaryItem">
 			<!--不使用驼峰表示法生成对应的属性-->
 			<property name="useActualColumnNames" value="false"/>
 			<property name="constructorBased" value="false" />

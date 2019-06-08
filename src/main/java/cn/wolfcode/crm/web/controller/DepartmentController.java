@@ -4,7 +4,8 @@ import cn.wolfcode.crm.domain.Department;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.service.IDepartmentService;
 import cn.wolfcode.crm.util.JsonResult;
-import cn.wolfcode.crm.util.RequiredPermission;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ public class DepartmentController {
     private IDepartmentService service;
 
     @RequestMapping("/list")
-    @RequiredPermission({"部门列表","department:list"})
+    @RequiresPermissions(value={"部门列表","department:list"}, logical = Logical.OR)
     public String list(Model model, QueryObject qo){
         System.out.println(qo);
         model.addAttribute("result",service.query(qo));
@@ -29,7 +30,7 @@ public class DepartmentController {
     }
 
     @RequestMapping("/delete")
-    @RequiredPermission({"部门删除","department:delete"})
+    @RequiresPermissions(value={"部门删除","department:delete"}, logical = Logical.OR)
     @ResponseBody
     public JsonResult delete(Model model, Long id){
         JsonResult result = new JsonResult();
@@ -45,7 +46,7 @@ public class DepartmentController {
     }
 
     @RequestMapping("/input")
-    @RequiredPermission({"部门编辑","department:input"})
+    @RequiresPermissions(value={"部门编辑","department:input"}, logical = Logical.OR)
     public String input(Model model,Long id){
         if(id != null){
             Department department = service.get(id);
@@ -55,7 +56,7 @@ public class DepartmentController {
     }
 
     @RequestMapping("/saveOrUpdate")
-    @RequiredPermission({"部门保存或更新","department:saveOrUpdate"})
+    @RequiresPermissions(value={"部门保存或更新","department:saveOrUpdate"}, logical = Logical.OR)
     @ResponseBody
     public JsonResult saveOrUpdate(Model model, Department department){
        JsonResult result = new JsonResult();

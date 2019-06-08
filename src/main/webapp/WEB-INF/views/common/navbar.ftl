@@ -18,7 +18,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/js/adminlte/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                        <span class="hidden-xs">叩丁狼</span>
+                        <span class="hidden-xs"><@shiro.principal property="name" /></span>
                     </a>
                     <ul class="dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" style="min-width: 100px;">
                         <li>
