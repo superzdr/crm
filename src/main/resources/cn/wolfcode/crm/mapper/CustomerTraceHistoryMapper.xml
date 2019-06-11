@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.crm.mapper.CustomerTraceHistoryMapper">
+
+  <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.CustomerTraceHistory">
+    <id column="id" property="id" />
+    <result column="trace_time" property="traceTime" />
+    <result column="trace_details" property="traceDetails" />
+    <result column="trace_result" property="traceResult" />
+    <result column="remark" property="remark" />
+    <result column="input_time" property="inputTime" />
+    <association columnPrefix="rtype_" javaType="cn.wolfcode.crm.domain.SystemDictionaryItem" property="type">
+      <id column="id" property="id" />
+      <result column="title" property="title" />
+    </association>
+    <association columnPrefix="ctr_" javaType="cn.wolfcode.crm.domain.Customer" property="customer">
+      <id column="id" property="id" />
+      <result column="name" property="name" />
+    </association>
+    <association columnPrefix="emp_" javaType="cn.wolfcode.crm.domain.Employee" property="inputUser">
+      <id column="id" property="id" />
+      <result column="name" property="name" />
+    </association>
+
+  </resultMap>
+
+  <insert id="insert" keyProperty="id" parameterType="cn.wolfcode.crm.domain.CustomerTraceHistory" useGeneratedKeys="true">
+    insert into customertracehistory (trace_time, trace_details, trace_type_id, trace_result, remark,
+      customer_id, input_user_id, input_time)
+    values (#{traceTime}, #{traceDetails}, #{type.id}, #{traceResult}, #{remark},
+      #{customer.id}, #{inputUser.id}, #{inputTime})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.CustomerTraceHistory">
+    update customertracehistory
+    set trace_time = #{traceTime},
+      trace_details = #{traceDetails},
+      trace_type_id = #{type.id},
+      trace_result = #{traceResult},
+      remark = #{remark}
+
+    where id = #{id}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, trace_time, trace_details, trace_type_id, trace_result, remark, customer_id,
+    input_user_id, input_time
+    from customertracehistory
+  </select>
+
+  <select id="selectForList" resultMap="BaseResultMap">
+    select cth.id, cth.trace_time, cth.trace_details,
+    rtype.id rtype_id, rtype.title rtype_title,
+    cth.trace_result, cth.remark,
+    ctr.id ctr_id, ctr.name ctr_name,
+    emp.id emp_id, emp.name emp_name,
+    cth.input_time
+    from customertracehistory cth
+    LEFT JOIN systemdictionaryitem rtype ON cth.trace_type_id = rtype.id
+    LEFT JOIN customer ctr ON cth.customer_id = ctr.id
+    LEFT JOIN employee emp ON cth.input_user_id = emp.id
+    <where>
+      <if test="keyword != null">
+        AND (ctr.name LIKE concat('%',#{keyword},'%') OR ctr.tel like concat('%',#{keyword},'%'))
+      </if>
+    </where>
+  </select>
+</mapper>

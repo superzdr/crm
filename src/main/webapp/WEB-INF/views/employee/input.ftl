@@ -69,7 +69,7 @@
                 rules:{
                     name:{
                         required:true,
-                        minlength:4
+                        minlength:2
                     },
                     /*password:{
                         required:true,

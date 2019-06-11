@@ -31,4 +31,6 @@ public interface IEmployeeService {
     Workbook exportXls();
 
     void importXls(InputStream inputStream);
+
+    List<Employee> listEmpsByRoleSns(String...roleSns);
 }

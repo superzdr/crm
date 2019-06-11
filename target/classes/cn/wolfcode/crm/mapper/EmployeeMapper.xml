@@ -104,6 +104,20 @@
     <select id="selectByUsername" resultType="cn.wolfcode.crm.domain.Employee">
         SELECT * FROM employee WHERE name=#{username}
     </select>
+    <select id="selectByRoleSns" resultType="cn.wolfcode.crm.domain.Employee">
+        select *
+        from employee e
+        LEFT JOIN employee_role er ON e.id = er.employee_id
+        LEFT JOIN role r ON er.role_id = r.id
+        <where>
+            <if test="array != null">
+                AND r.sn IN
+                <foreach collection="array" open="(" close=")" separator="," item="sn">
+                    #{sn}
+                </foreach>
+            </if>
+        </where>
+    </select>
 
     <!--<select id="selectExpressionsByEmployeeId" resultType="java.lang.String">
         SELECT DISTINCT p.expression

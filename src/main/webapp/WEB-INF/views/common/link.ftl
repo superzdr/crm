@@ -14,5 +14,6 @@
 <script type="text/javascript" src="/js/jquery/jquery.validate.min.js"></script>
 <script type="text/javascript" src="/js/jquery/messages_cn.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/js/plugins/My97DatePicker/WdatePicker.js"></script>
 <script src="/js/system/commonAll.js"></script>
 

@@ -80,6 +80,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         return mapper.deletFromEmployeeRole(id);
     }
 
+    //在使用了shiro filter之后该方法实际上是没有用到的
     @Override
     public void login(String username, String password) {
         Employee employee = mapper.selectByUsenameAndPassword(username, password);
@@ -139,4 +140,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<Employee> listEmpsByRoleSns(String... roleSns) {
+        return mapper.selectByRoleSns(roleSns);
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package cn.wolfcode.crm.util;
 
+import cn.wolfcode.crm.domain.Customer;
 import cn.wolfcode.crm.domain.Employee;
 import cn.wolfcode.crm.mapper.EmployeeMapper;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -32,5 +34,9 @@ public class UserContext {
 
     public static List<String> getExpressionInSession(){
         return (List<String>) getSession().getAttribute("EXPRESSION_IN_SESSION");
+    }
+
+    public static Employee getCurrentEmp(){
+        return (Employee) SecurityUtils.getSubject().getPrincipal();
     }
 }

@@ -36,4 +36,11 @@
     from systemdictionaryitem
     WHERE parent_id=#{parentId}
   </select>
+
+
+    <select id="selectByDictionarySn" resultType="cn.wolfcode.crm.domain.SystemDictionaryItem">
+      SELECT * FROM systemdictionaryitem sdi
+      LEFT JOIN systemdictionary sd ON sdi.parent_id = sd.id
+      WHERE sd.sn = #{sn}
+    </select>
 </mapper>

@@ -67,7 +67,6 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-
 		<!-- 对于mybatis来说，即生成Mapper接口，注意，如果没有配置该元素，那么默认不会生成Mapper接口 targetPackage/targetProject:同javaModelGenerator
 			type：选择怎么生成mapper接口（在MyBatis3/MyBatis3Simple下）： 1，ANNOTATEDMAPPER：会生成使用Mapper接口+Annotation的方式创建（SQL生成在annotation中），不会生成对应的XML；
 			2，MIXEDMAPPER：使用混合配置，会生成Mapper接口，并适当添加合适的Annotation，但是XML会生成在XML中； 3，XMLMAPPER：会生成Mapper接口，接口完全依赖XML；
@@ -81,14 +80,12 @@
 				value=""/> -->
 		</javaClientGenerator>
 
-		<table tableName="systemdictionaryitem" domainObjectName="SystemDictionaryItem">
+		<table tableName="customertransferhistory" domainObjectName="CustomerTransferHistory">
 			<!--不使用驼峰表示法生成对应的属性-->
 			<property name="useActualColumnNames" value="false"/>
 			<property name="constructorBased" value="false" />
 			<generatedKey column="id" sqlStatement="JDBC" />
 		</table>
         <!--是否需要创建下一个表-->
-
-
 	</context>
 </generatorConfiguration>

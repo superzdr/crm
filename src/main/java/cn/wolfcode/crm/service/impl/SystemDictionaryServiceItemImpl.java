@@ -50,5 +50,10 @@ public class SystemDictionaryServiceItemImpl implements ISystemDictionaryItemSer
         return new PageInfo<>(list);
     }
 
+    @Override
+    public List<SystemDictionaryItem> selectByDictionarySn(String sn) {
+        return mapper.selectByDictionarySn(sn);
+    }
+
 
 }

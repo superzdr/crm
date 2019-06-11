@@ -35,4 +35,6 @@ public interface EmployeeMapper {
     Employee selectByUsername(String name);
 
     void batchDelete(Long[] ids);
+
+    List<Employee> selectByRoleSns(String[] roleSns);
 }

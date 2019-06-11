@@ -16,4 +16,6 @@ public interface ISystemDictionaryItemService {
     List<SystemDictionaryItem> listAll();
 
     PageInfo<SystemDictionaryItem> query(ItemQueryObject qo);
+
+    List<SystemDictionaryItem> selectByDictionarySn(String sn);
 }

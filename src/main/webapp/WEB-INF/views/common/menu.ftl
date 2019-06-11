@@ -72,7 +72,7 @@
 
                     <li name="customerTraceHistory"><a href="/customerTraceHistory/list.do"><i
                             class="fa fa-circle-o"></i> 跟进历史</a></li>
-                    <li name="customerTransfer"><a href="/customerTransfer/list.do"><i class="fa fa-circle-o"></i> 移交历史</a>
+                    <li name="customerTransferHistory"><a href="/customerTransferHistory/list.do"><i class="fa fa-circle-o"></i> 移交历史</a>
                     </li>
                 </ul>
             </li>
